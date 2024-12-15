@@ -1,0 +1,230 @@
+@startuml
+class chat.DBConnect {
+~ String url
+~ String user
+~ String pw
+~ SHA256 sha256
+- Connection conn
+- PreparedStatement pstmt
+~ ResultSet rs
++ Connection connect()
++ void disconnect()
++ boolean InsertUserInfo(String,String,String)
++ Boolean Search_dupId(String)
++ boolean checkuserId(String)
++ boolean checkPassword(String,String)
++ Room getRoomBySocketNum(int)
++ boolean insertRoom(Room)
++ boolean updateRoomBySocketNum(int,String)
++ ArrayList<userDTO> setUserInfo(String)
+}
+
+
+class chat.chatroom.ChatServer {
+~ ServerBack sb
+~ String host
+}
+
+class chat.chatroom.ChatServer$ServerBack {
+~ ArrayList<ThreadList> T_list
+~ ArrayList<String> idList
+~ ServerSocket serversocket
+~ Socket socket
+~ int port
++ void ServerOpen()
++ void run()
+}
+
+
+class chat.chatroom.ChatServer$ServerBack$ThreadList {
+- DataInputStream dis
+- DataOutputStream dos
+~ String id
+~ String msg
++ void run()
++ void SendMessage(String)
++ void SendAll(String)
++ void Whisper(String,String,String)
++ boolean checkuser(String)
+}
+
+
+class chat.Login.HintTextField {
+- String hint
+# void paintComponent(Graphics)
+}
+
+
+class chat.Login.HintPwField {
+- String hint
+# void paintComponent(Graphics)
+}
+
+
+class chat.Lobby.LobbyServer {
+~ JTextArea textArea
+~ ServerBack sb
++ {static} void main(String[])
+}
+
+
+class chat.Lobby.LobbyServer$ServerBack {
+~ ArrayList<ThreadList> T_list
+~ ArrayList<String> idList
+~ ServerSocket serversocket
+~ Socket socket
+~ int port
++ void ServerOpen()
++ void run()
+}
+
+
+class chat.Lobby.LobbyServer$ServerBack$ThreadList {
+- DataInputStream dis
+- DataOutputStream dos
+~ ArrayList<ThreadList> I_list
+~ String level
+~ String id
+~ String msg
++ void startChat(int,String,String,String,String)
++ void run()
++ void SendMessage(String)
++ void SendAll(String)
++ boolean checkuser(String)
+}
+
+
+class chat.Login.userDTO {
+~ String id
+~ String pw
+~ String level
++ String getId()
++ void setId(String)
++ String getPw()
++ void setPw(String)
++ String getLevel()
++ void setLevel(String)
+}
+
+
+class chat.chatroom.ChatFrame {
+- boolean completed
+- boolean flag
+- Object lock
+- int port
+- String messages
++ {static} void main(String[])
++ boolean waitForCompletion()
++ int getPort()
++ String getMessages()
+}
+
+
+class chat.Login.LoginFrame {
++ {static} ArrayList<userDTO> userInfo
++ {static} void main(String[])
+}
+
+
+class chat.Login.signup {
+~ boolean testValue
+}
+
+class chat.Login.SHA256 {
++ {static} String encrypt(String)
+- {static} String bytesToHex(byte[])
+}
+
+class chat.Lobby.LobbyClient {
+~ JTextArea textArea
+~ JList P_list
+~ JList I_List
+~ JTextField MsgField
+~ JButton sendbtn
+~ JButton createbtn
+~ JButton clearbtn
+~ Socket socket
+~ DataInputStream dis
+~ DataOutputStream dos
+~ int port
+~ DefaultListModel model
+~ DefaultListModel inviteModel
+~ ArrayList<String> nameList
+~ ArrayList<String> inviteList
+~ void sendMessage(String)
+}
+
+
+class chat.Lobby.LobbyClient$ClientThread {
+~ int port
++ void run()
+}
+
+
+class chat.chatroom.Room {
+- int socket
+- String title
+- String messages
+- String host
++ int getSocket()
++ void setSocket(int)
++ String getTitle()
++ void setTitle(String)
++ void setMessages(String)
++ void addMessages(String)
++ String getMessages()
++ void setHost(String)
++ String getHost()
+}
+
+
+class chat.chatroom.ChatClient {
+~ JTextPane textPane
+~ StyledDocument doc
+~ JList P_list
+~ DBConnect db
+~ JTextField MsgField
+~ JButton sendbtn
+~ Socket socket
+~ DataInputStream dis
+~ DataOutputStream dos
+~ DefaultListModel model
+~ ArrayList<String> nameList
+~ String inputId
+~ String level
+~ String host
+~ String messages
+~ void appendMessage(String,Color)
+~ void sendMessage()
+}
+
+
+class chat.chatroom.ChatClient$ClientThread {
+~ int port
++ void run()
+}
+
+
+
+
+chat.chatroom.ChatServer +.. chat.chatroom.ChatServer$ServerBack
+chat.chatroom.Thread <|-- chat.chatroom.ChatServer$ServerBack
+chat.chatroom.ChatServer$ServerBack +.. chat.chatroom.ChatServer$ServerBack$ThreadList
+chat.chatroom.Thread <|-- chat.chatroom.ChatServer$ServerBack$ThreadList
+chat.Login.JTextField <|-- chat.Login.HintTextField
+chat.Login.JPasswordField <|-- chat.Login.HintPwField
+chat.Lobby.JFrame <|-- chat.Lobby.LobbyServer
+chat.Lobby.LobbyServer +.. chat.Lobby.LobbyServer$ServerBack
+chat.Lobby.Thread <|-- chat.Lobby.LobbyServer$ServerBack
+chat.Lobby.LobbyServer$ServerBack +.. chat.Lobby.LobbyServer$ServerBack$ThreadList
+chat.Lobby.Thread <|-- chat.Lobby.LobbyServer$ServerBack$ThreadList
+chat.chatroom.JFrame <|-- chat.chatroom.ChatFrame
+chat.Login.JFrame <|-- chat.Login.LoginFrame
+chat.Login.JFrame <|-- chat.Login.signup
+chat.Lobby.JFrame <|-- chat.Lobby.LobbyClient
+chat.Lobby.LobbyClient +.. chat.Lobby.LobbyClient$ClientThread
+chat.Lobby.Thread <|-- chat.Lobby.LobbyClient$ClientThread
+chat.chatroom.JFrame <|-- chat.chatroom.ChatClient
+chat.chatroom.ChatClient +.. chat.chatroom.ChatClient$ClientThread
+chat.chatroom.Thread <|-- chat.chatroom.ChatClient$ClientThread
+@enduml

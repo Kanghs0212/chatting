@@ -1,0 +1,34 @@
+@startuml
+class chat.chatroom.ChatClient {
+~ JTextPane textPane
+~ StyledDocument doc
+~ JList P_list
+~ DBConnect db
+~ JTextField MsgField
+~ JButton sendbtn
+~ Socket socket
+~ DataInputStream dis
+~ DataOutputStream dos
+~ DefaultListModel model
+~ ArrayList<String> nameList
+~ String inputId
+~ String level
+~ String host
+~ String messages
+~ void appendMessage(String,Color)
+~ void sendMessage()
+}
+
+
+class chat.chatroom.ChatClient$ClientThread {
+~ int port
++ void run()
+}
+
+
+
+
+chat.chatroom.JFrame <|-- chat.chatroom.ChatClient
+chat.chatroom.ChatClient +.. chat.chatroom.ChatClient$ClientThread
+chat.chatroom.Thread <|-- chat.chatroom.ChatClient$ClientThread
+@enduml
